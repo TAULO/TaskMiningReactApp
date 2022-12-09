@@ -7,7 +7,8 @@ const nodeTypes = {
   task: TaskFlowItemComponent
 }
 
-export default function Flow({ indvTask }) {
+export default function Flow({ indvTask, allTasks }) {
+
   const nodes = []
   const edges = []
 
@@ -34,9 +35,40 @@ export default function Flow({ indvTask }) {
           animated: true
         })
     }
-    
   }
   loadFlowChart()
+
+  function loadAllTasks() {
+    for (let i = 0; i < allTasks?.length; i++) {
+      for (let j = 0; j < allTasks[i].tasks.length; j++) {
+        const tasks = allTasks[i].tasks[j]
+        const ui = allTasks[i].userInteractions[j]
+        const time = allTasks[i].individualTaskTime[j]
+        const index = i + 1
+        nodes.push(
+          {
+            id: `node-${index}`,
+            type: "task",
+            position: {x: 120, y: 200 * index},
+            data: {data: {
+              index: index,
+              task: tasks,
+              ui: ui,
+              time: time
+            }}
+          })
+          edges.push(
+            {
+              id: `node-${index}`,
+              source: `node-${index}`,
+              target: `node-${index + 1}`,
+              animated: true
+            })
+      }
+    }
+  }
+
+  // loadAllTasks()
 
   const edgeOptions = {
     animated: true,
@@ -52,7 +84,7 @@ export default function Flow({ indvTask }) {
         nodeTypes={nodeTypes}
         edgeOptions={edgeOptions}
         > 
-         <Controls />
+        <Controls />
         <MiniMap></MiniMap>
         <Background></Background>
       </ReactFlow>

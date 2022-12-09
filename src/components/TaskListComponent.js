@@ -1,25 +1,42 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import TaskHeaderComponent from './TaskHeaderComponent';
 import TaskFlowComponent from './TaskFlowComponent';
 import StatsComponent from './StatsComponent';
 import TasksListComponent from './TasksListComponent';
 import UIStatsComponent from './UIStatsComponent';
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashArrowUp } from '@fortawesome/free-solid-svg-icons';
+
+
 
 export default function TaskListComponent({ tasksList }) {
     const [indvTasks, setIndvTasks] = useState({})
-    const [tasks, setTasks] = useState(tasksList)
+    const [tasks, setTasks] = useState([])
+    const navigate = useNavigate()
 
-    async function search(task) {
+    useEffect(() => {
+        setTasks(tasksList)
+    }, [tasksList])
+
+    function search(task) {
         const value = task.target.value.trim()
+
+        setTasks(tasksList)
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].name === value) {
+                setTasks(tasks.filter(task => task.name.trim() === value))
+            }
+        }
     }
 
-    async function getTask(task) {
+    function getTask(task) {
         const value = task.target.textContent
         setIndvTasks(tasksList.find(task => task.name === value))
     }
 
     function orderName() {
-        const sortArr = tasksList.sort((a, b) => {
+        const sortArr = tasksList.sort((a, b) => {  
             if (a.name < b.name) {
               return -1;
             }
@@ -28,7 +45,7 @@ export default function TaskListComponent({ tasksList }) {
             }
             return 0;
           })
-          setTasks(sortArr)
+        setTasks(sortArr)
     }
 
     function orderSteps() {
@@ -39,16 +56,25 @@ export default function TaskListComponent({ tasksList }) {
         setTasks(tasksList.sort((a, b) => parseInt(a.taskCompletionTimeSeconds) - parseInt(b.taskCompletionTimeSeconds)).reverse())
     }
 
+    function deleteAll() {
+        fetch("http://localhost:5104/api/tasks/reset")
+        .then(navigate("/"))
+    }
+
     return (
-        <div className='flex border-b'>
-            <TasksListComponent tasksList={tasksList} orderName={orderName} orderSteps={orderSteps} orderLongestTask={orderLongestTask} search={search} getTask={getTask}></TasksListComponent>
+        <div className='flex'>
+            <div>
+                {console.log("??+")}
+                <TasksListComponent tasksList={tasks} orderName={orderName} orderSteps={orderSteps} orderLongestTask={orderLongestTask} search={search} getTask={getTask}></TasksListComponent>
+                <FontAwesomeIcon icon={faTrashArrowUp} className="w-full h-10 text-orange-500 hover:opacity-50 hover:cursor-pointer" onClick={deleteAll}></FontAwesomeIcon>
+            </div>
             <div>
                 <TaskHeaderComponent indvTask={indvTasks || {}}></TaskHeaderComponent>
                 <TaskFlowComponent indvTask={indvTasks || {}}></TaskFlowComponent>
             </div>
-            <div className='flex flex-col flex-1'>
+            <div className='flex flex-col flex-1 border-b'>
                 <StatsComponent object={indvTasks?.timeSpentPrApplication} unit="sec" taskCompletionTime={indvTasks?.taskCompletionTimeSeconds} title="Time spent per application"></StatsComponent>
-                <StatsComponent object={indvTasks?.individualTaskUserCount} unit="steps" taskCompletionTime={indvTasks?.tasksCount}  title="User total individual steps"></StatsComponent>
+                <StatsComponent object={indvTasks?.individualTaskUserCount} unit="steps" taskCompletionTime={indvTasks?.tasksCount} title="User total individual steps"></StatsComponent>
                 <UIStatsComponent object={indvTasks?.individualTaskUserInteractionsCount} indvTask={indvTasks}></UIStatsComponent>
             </div>
         </div>

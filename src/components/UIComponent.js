@@ -5,7 +5,9 @@ export default function UIComponent({ title, value, icon, totalUI }) {
     return (
     <div>
         <div className="text-center md:border-r">
-            <FontAwesomeIcon icon={icon}></FontAwesomeIcon>
+            <div className='flex justify-end mr-3'>
+                <FontAwesomeIcon icon={icon}></FontAwesomeIcon>
+            </div>
             <div className='flex flex-1 justify-center mt-2'>
                 <div className="text-md font-bold lg:text-5xl xl:text-4xl">
                     { value }

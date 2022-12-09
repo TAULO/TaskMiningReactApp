@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import UploadFilesComponent from './UploadFilesComponent';
 import FileTasksList from './FileTasksList';
 import SpinnerComponent from './SpinnerComponent';
-import useFetch from '../Hooks/useFetch';
 
 function FileUpload() {
     const [filesArr, setFilesArr] = useState([])

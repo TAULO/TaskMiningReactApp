@@ -5,9 +5,8 @@ export default function TaskListItem({ index, task, selectedTasks, setSelectedTa
   const [isChecked, setIsChecked] = useState(false)
 
   function handleCheck(cb) {
-      setIsChecked(!isChecked)
-      const parentNode = cb.parentElement.parentElement
-      // cb.checked ? parentNode.className += " bg-green-200" selectedTasks.push(task) : parentNode.style["background-color"] = "white"
+    setIsChecked(!isChecked)
+    const parentNode = cb.parentElement.parentElement
     if (cb.checked) {
       parentNode.style["background-color"] = "rgba(0, 255, 0, 0.2)"
       selectedTasks.push(task)

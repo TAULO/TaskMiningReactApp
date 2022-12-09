@@ -1,13 +1,31 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import ButtonComponent from './ButtonComponent'
 import FileItem from './FileItem'
 
 
-export default function FileTasksList({ tasksList, search, deleteFile, previewFile, deleteAll, analyseAll }) {
+export default function FileTasksList({ tasksList, deleteFile, previewFile, deleteAll, analyseAll }) {
+    const [tasks, setTasks] = useState([])
+
+    useEffect(() => {
+        setTasks(tasksList)
+    }, [tasksList])
+
+    function search(task) {
+        const value = task.target.value.trim()
+
+        setTasks(tasksList)
+        for (let i = 0; i < tasks.length; i++) {
+            if (tasks[i].name === value) {
+                setTasks(tasks.filter(task => task.name.trim() === value))
+            }
+        }
+    }
+
     return (
         <div className='w-full max-w-sm'>
+            {console.log("adad")}
             <div className='bg-white shadow-md rounded-lg px-2 py-2 mb-4 border-1'>
                 <div className='block text-gray-700 text-lg font-semibold py-2 px-2'>Total files ({tasksList.length || 0})</div>
                 <div className='flex items-center bg-gray-200 rounded-md'>
@@ -17,7 +35,7 @@ export default function FileTasksList({ tasksList, search, deleteFile, previewFi
                 <div className="flex-grow border-t border-gray-400 mt-4"></div>
                 <div className='py-3 text-sm'>
                     <div className='flex flex-col justify-start text-gray-700 rounded-md px-2 py-2 my-2 max-h-96 overflow-auto'>
-                        {tasksList.map((task, index) => {
+                        {tasks.map((task, index) => {
                             return (
                             <div key={index} className='hover:bg-gray-200 hover:cursor-pointer'> 
                                 {<FileItem index={index} name={task.name} size={task.size} deleteFile={deleteFile} previewFile={previewFile}></FileItem>}
