@@ -1,6 +1,6 @@
 import React from 'react'
-
 export default function TaskHeaderComponent({ indvTask }) {
+
   return (
     <div className="bg-white h-28 px-3 py-2 border">
       <div className='flex flex-col'>

@@ -25,7 +25,6 @@ export default function FileTasksList({ tasksList, deleteFile, previewFile, dele
 
     return (
         <div className='w-full max-w-sm'>
-            {console.log("adad")}
             <div className='bg-white shadow-md rounded-lg px-2 py-2 mb-4 border-1'>
                 <div className='block text-gray-700 text-lg font-semibold py-2 px-2'>Total files ({tasksList.length || 0})</div>
                 <div className='flex items-center bg-gray-200 rounded-md'>

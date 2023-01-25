@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import UploadFilesComponent from './UploadFilesComponent';
 import FileTasksList from './FileTasksList';
 import SpinnerComponent from './SpinnerComponent';
+import useFetch from '../hooks/useFetch';
 
 function FileUpload() {
     const [filesArr, setFilesArr] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState("")
     const navigate = useNavigate()
+    const deleteAll = useFetch("http://localhost:5104/api/tasks/reset", {mode: "no-cors", method: "GET"})
 
     function readFiles(file) {
         const arr = []
@@ -47,6 +50,7 @@ function FileUpload() {
         // }
     }
 
+
     function deleteAllFiles() {
     //     useFetch("http://localhost:5104/api/tasks/reset", {mode: "no-cors", method: "GET"})
     //     setFilesArr([])
@@ -54,6 +58,11 @@ function FileUpload() {
     }
 
     const promise = () => new Promise((resolve, reject) => {
+        if (filesArr.length <= 0) {
+            window.alert("No tasks selected")
+            return 
+        }
+
         const bodyArr = []
         setIsLoading(true)
         console.log("analysing...")
@@ -81,19 +90,20 @@ function FileUpload() {
             }
             resolve(bodyArr)
         }, 2000)
-    })
+    }   )
     .then(data => console.log("data", data))
-    .catch(e => console.log("Error", e))
+    .catch(e => setError(e.message))
     .finally(() => {
-        setIsLoading(false)
+        setIsLoading(false) 
         console.log("done analysing")
         navigate("/analyse")
     })
 
     return (
         <div className='flex flex-1 justify-center align-middle space-x-40 mt-72'>
-            {isLoading ? <SpinnerComponent></SpinnerComponent> : null}
-            <FileTasksList tasksList={filesArr} search={search} deleteFile={(e) => deleteFile(e)} previewFile={(e) => previewFile(e.target)} deleteAll={deleteAllFiles} analyseAll={promise}></FileTasksList>
+            {console.log(filesArr.length)}
+            {isLoading ? <SpinnerComponent error={error}></SpinnerComponent> : null}
+            <FileTasksList tasksList={filesArr} search={search} deleteFile={(e) => deleteFile(e)} previewFile={(e) => previewFile(e.target)} deleteAll={() => deleteAll} analyseAll={promise} ></FileTasksList>
             <UploadFilesComponent readFiles={readFiles}></UploadFilesComponent>
         </div>
     )

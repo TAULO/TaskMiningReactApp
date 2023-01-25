@@ -64,7 +64,6 @@ export default function TaskListComponent({ tasksList }) {
     return (
         <div className='flex'>
             <div>
-                {console.log("??+")}
                 <TasksListComponent tasksList={tasks} orderName={orderName} orderSteps={orderSteps} orderLongestTask={orderLongestTask} search={search} getTask={getTask}></TasksListComponent>
                 <FontAwesomeIcon icon={faTrashArrowUp} className="w-full h-10 text-orange-500 hover:opacity-50 hover:cursor-pointer" onClick={deleteAll}></FontAwesomeIcon>
             </div>
