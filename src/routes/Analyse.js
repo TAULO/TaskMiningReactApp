@@ -1,7 +1,7 @@
 import React from 'react'
 import TaskListComponent from '../components/TaskListComponent'
 import SpinnerComponent from "../components/SpinnerComponent"
-import useFetch from '../hooks/useFetch'
+import useFetch from '../Hooks/useFetch'
 
 export default function Analyse() {
   const { response, error } = useFetch("http://localhost:5104/api/tasks")
